@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>The Impossible Puzzle</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+
+            margin: 0;
+
+            min-height: 100vh;
+
+            background: #050505;
+
+            color: #eeeeee;
+
+            font-family:
+                "Courier New",
+                monospace;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+        }
+
+        .container {
+
+            width: 92%;
+
+            max-width: 900px;
+
+            padding: 45px;
+
+            background: #101010;
+
+            border:
+                1px solid #333;
+
+            box-shadow:
+                0 0 50px
+                rgba(255,255,255,0.04);
+
+            animation:
+                fadeIn 1s ease;
+
+        }
+
+        h1 {
+
+            text-align: center;
+
+            font-size: 38px;
+
+            letter-spacing: 7px;
+
+            margin-top: 0;
+
+        }
+
+        h2 {
+
+            text-align: center;
+
+            letter-spacing: 5px;
+
+        }
+
+        .layer {
+
+            text-align: center;
+
+            color: #777;
+
+            letter-spacing: 6px;
+
+            font-size: 13px;
+
+            margin-bottom: 15px;
+
+        }
+
+        .description {
+
+            color: #aaa;
+
+            line-height: 1.8;
+
+        }
+
+        .clue {
+
+            margin-top: 25px;
+
+            padding: 20px;
+
+            background: #151515;
+
+            border-left:
+                3px solid #666;
+
+            line-height: 1.8;
+
+        }
+
+        button {
+
+            width: 100%;
+
+            padding: 15px;
+
+            margin-top: 15px;
+
+            background: #151515;
+
+            color: white;
+
+            border:
+                1px solid #444;
+
+            font-family:
+                "Courier New",
+                monospace;
+
+            cursor: pointer;
+
+            transition: 0.25s;
+
+        }
+
+        button:hover {
+
+            background: white;
+
+            color: black;
+
+            border-color: white;
+
+        }
+
+        input {
+
+            width: 100%;
+
+            padding: 15px;
+
+            margin-top: 20px;
+
+            background: #050505;
+
+            color: white;
+
+            border:
+                1px solid #444;
+
+            outline: none;
+
+            font-family:
+                "Courier New",
+                monospace;
+
+            font-size: 16px;
+
+            text-align: center;
+
+        }
+
+        textarea {
+
+            width: 100%;
+
+            min-height: 150px;
+
+            padding: 15px;
+
+            margin-top: 20px;
+
+            background: #050505;
+
+            color: white;
+
+            border:
+                1px solid #444;
+
+            outline: none;
+
+            font-family:
+                "Courier New",
+                monospace;
+
+            resize: vertical;
+
+        }
+
+        .sequence {
+
+            text-align: center;
+
+            font-size: 25px;
+
+            letter-spacing: 10px;
+
+            margin: 30px 0;
+
+        }
+
+        .words {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            justify-content: center;
+
+            gap: 10px;
+
+            margin-top: 30px;
+
+        }
+
+        .word {
+
+            padding: 12px 17px;
+
+            background: #191919;
+
+            border:
+                1px solid #444;
+
+            cursor: pointer;
+
+            user-select: none;
+
+            transition: 0.2s;
+
+        }
+
+        .word:hover {
+
+            background: white;
+
+            color: black;
+
+        }
+
+        .word.selected {
+
+            background: white;
+
+            color: black;
+
+        }
+
+        .answer-box {
+
+            min-height: 60px;
+
+            margin-top: 25px;
+
+            padding: 18px;
+
+            background: #050505;
+
+            border:
+                1px solid #444;
+
+            color: #aaa;
+
+            text-align: center;
+
+            line-height: 1.7;
+
+        }
+
+        #result {
+
+            margin-top: 25px;
+
+            text-align: center;
+
+            line-height: 1.8;
+
+            min-height: 30px;
+
+        }
+
+        .success {
+
+            color: #7cff7c;
+
+        }
+
+        .error {
+
+            color: #ff6666;
+
+        }
+
+        .warning {
+
+            color: #aaa;
+
+        }
+
+        .troll {
+
+            margin-top: 30px;
+
+            padding: 25px;
+
+            background: #151515;
+
+            border:
+                1px solid #333;
+
+            text-align: center;
+
+            line-height: 2;
+
+        }
+
+        .final {
+
+            text-align: center;
+
+            line-height: 2;
+
+        }
+
+        .final-title {
+
+            font-size: 42px;
+
+            letter-spacing: 7px;
+
+        }
+
+        .hidden {
+
+            display: none;
+
+        }
+
+        @keyframes fadeIn {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(20px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0);
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- ================================= -->
+    <!-- START -->
+    <!-- ================================= -->
+
+    <section id="startScreen">
+
+        <div class="layer">
+            THE IMPOSSIBLE PUZZLE
+        </div>
+
+        <h1>WELCOME</h1>
+
+        <div class="description">
+
+            <p>
+                Tiga puzzle.
+            </p>
+
+            <p>
+                Tiga sumber.
+            </p>
+
+            <p>
+                Satu jawaban terakhir.
+            </p>
+
+            <p>
+                Jangan percaya semua yang
+                terlihat mudah.
+            </p>
+
+        </div>
+
+        <button onclick="startGame()">
+
+            BEGIN
+
+        </button>
+
+    </section>
+
+    <!-- ================================= -->
+    <!-- PUZZLE 1 -->
+    <!-- ================================= -->
+
+    <section id="puzzle1"
+             class="hidden">
+
+        <div class="layer">
+            LAYER 01
+        </div>
+
+        <h1>THE ARCHIVE</h1>
+
+        <div class="description">
+
+            <p>
+                Sebuah informasi tersembunyi
+                berada di dalam sebuah halaman
+                yang tampaknya biasa.
+            </p>
+
+            <p>
+                Cari sebuah kalimat.
+            </p>
+
+        </div>
+
+        <div class="clue">
+
+            <p>
+                Tokoh:
+                <strong>Isaac Newton</strong>
+            </p>
+
+            <p>
+                Sebuah risalah ditulis dalam
+                <strong>9 halaman</strong>.
+            </p>
+
+            <p>
+                Risalah tersebut disalin ke
+                dalam buku register
+                <strong>Royal Society</strong>.
+            </p>
+
+            <p>
+                Waktunya:
+                <strong>Desember 1684</strong>.
+            </p>
+
+            <p>
+                Risalah tersebut kemudian
+                menjadi inti argumen yang
+                dikembangkan dalam
+                <strong>Principia</strong>.
+            </p>
+
+        </div>
+
+        <button onclick="openNewton()">
+
+            OPEN ISAAC NEWTON
+
+        </button>
+
+        <textarea
+            id="answer1"
+            placeholder="Masukkan kalimat yang lu temukan..."
+        ></textarea>
+
+        <button onclick="checkPuzzle1()">
+
+            SUBMIT
+
+        </button>
+
+        <div id="result1"></div>
+
+    </section>
+
+    <!-- ================================= -->
+    <!-- PUZZLE 1 SUCCESS -->
+    <!-- ================================= -->
+
+    <section id="success1"
+             class="hidden">
+
+        <div class="layer">
+            ACCESS GRANTED
+        </div>
+
+        <h1>SELAMAT.</h1>
+
+        <div class="description">
+
+            <p>
+                Anda telah berhasil melewati
+                <strong>PUZZLE PERTAMA.</strong>
+            </p>
+
+            <p>
+                Tetapi jangan terlalu cepat
+                merasa aman.
+            </p>
+
+            <p>
+                Ini baru permulaan.
+            </p>
+
+        </div>
+
+        <button onclick="goPuzzle2()">
+
+            CONTINUE TO LAYER 02 →
+
+        </button>
+
+    </section>
+
+    <!-- ================================= -->
+    <!-- PUZZLE 2 -->
+    <!-- ================================= -->
+
+    <section id="puzzle2"
+             class="hidden">
+
+        <div class="layer">
+            LAYER 02
+        </div>
+
+        <h1>THE MUSIC</h1>
+
+        <div class="description">
+
+            <p>
+                Kali ini, jawaban tidak berada
+                di halaman ini.
+            </p>
+
+            <p>
+                Sebuah irama tersembunyi
+                di dalam sebuah lembar musik.
+            </p>
+
+        </div>
+
+        <div class="clue">
+
+            <p>
+                Buka lembar musik
+                <strong>Beethoven Virus</strong>.
+            </p>
+
+            <p>
+                Cari sebuah pola yang terdiri
+                dari enam simbol.
+            </p>
+
+            <p>
+                Jangan menganggap pola tersebut
+                sebagai jawaban akhir.
+            </p>
+
+        </div>
+
+        <button onclick="openMusic()">
+
+            OPEN MUSIC SHEET
+
+        </button>
+
+        <div class="sequence">
+
+            ? ? ? ? ? ?
+
+        </div>
+
+        <input
+            id="answer2"
+            type="text"
+            placeholder="Masukkan enam simbol..."
+            autocomplete="off"
+        >
+
+        <button onclick="checkPuzzle2()">
+
+            SUBMIT
+
+        </button>
+
+        <div id="result2"></div>
+
+    </section>
+
+    <!-- ================================= -->
+    <!-- PUZZLE 2 VIDEO RETURN -->
+    <!-- ================================= -->
+
+    <section id="videoReturn"
+             class="hidden">
+
+        <div class="layer">
+            LAYER 02
+        </div>
+
+        <h1>...</h1>
+
+        <div class="troll">
+
+            <p>
+                Jadi...
+            </p>
+
+            <p>
+                Anda menemukan polanya.
+            </p>
+
+            <p>
+                Anda mengikuti petunjuknya.
+            </p>
+
+            <p>
+                Dan sekarang Anda mungkin
+                bertanya-tanya...
+            </p>
+
+            <p>
+                <strong>
+                    "Apa sebenarnya makna video tadi?"
+                </strong>
+            </p>
+
+            <p>
+                Jawabannya adalah bagian dari
+                puzzle ini.
+            </p>
+
+        </div>
+
+        <button onclick="goPuzzle3()">
+
+            I UNDERSTAND THE VIDEO →
+
+        </button>
+
+    </section>
+
+    <!-- ================================= -->
+    <!-- PUZZLE 3 -->
+    <!-- ================================= -->
+
+    <section id="puzzle3"
+             class="hidden">
+
+        <div class="layer">
+            FINAL LAYER
+        </div>
+
+        <h1>THE LAST WORDS</h1>
+
+        <div class="description">
+
+            <p>
+                Jika lu sudah sampai di sini,
+                berarti dua puzzle sebelumnya
+                berhasil dilewati.
+            </p>
+
+            <p>
+                Sekarang tidak ada kode.
+                Tidak ada musik.
+            </p>
+
+            <p>
+                Hanya kata-kata.
+            </p>
+
+        </div>
+
+        <div class="clue">
+
+            <p>
+                Buka:
+                <strong>
+                    Don Quixote —
+                    Part I, Chapter L
+                </strong>
+            </p>
+
+            <p>
+                Cari beberapa kata yang
+                tersebar di halaman tersebut.
+            </p>
+
+            <p>
+                Gabungkan kata-kata tersebut
+                menjadi sebuah kalimat.
+            </p>
+
+        </div>
+
+        <button onclick="openDonQuixote()">
+
+            OPEN DON QUIXOTE
+
+        </button>
+
+        <div class="words">
+
+            <div class="word"
+                 data-word="what">
+
+                what
+
+            </div>
+
+            <div class="word"
+                 data-word="Don">
+
+                Don
+
+            </div>
+
+            <div class="word"
+                 data-word="saying">
+
+                saying
+
+            </div>
+
+            <div class="word"
+                 data-word="shall">
+
+                shall
+
+            </div>
+
+            <div class="word"
+                 data-word="understand">
+
+                understand
+
+            </div>
+
+            <div class="word"
+                 data-word="quixote,">
+
+                quixote,
+
+            </div>
+
+            <div class="word"
+                 data-word="sancho">
+
+                sancho
+
+            </div>
+
+            <div class="word"
+                 data-word="don't">
+
+                don't
+
+            </div>
+
+        </div>
+
+        <div class="answer-box"
+             id="answerBox">
+
+            Susun kata-kata di sini...
+
+        </div>
+
+        <button onclick="checkPuzzle3()">
+
+            SUBMIT FINAL ANSWER
+
+        </button>
+
+        <button onclick="resetPuzzle3()">
+
+            RESET
+
+        </button>
+
+        <div id="result3"></div>
+
+    </section>
+
+    <!-- ================================= -->
+    <!-- FINAL -->
+    <!-- ================================= -->
+
+    <section id="finalScreen"
+             class="hidden">
+
+        <div class="final">
+
+            <div class="layer">
+                ALL LAYERS COMPLETE
+            </div>
+
+            <div class="final-title">
+                SELAMAT.
+            </div>
+
+            <p>
+
+                Lu berhasil menyelesaikan
+                seluruh puzzle.
+
+            </p>
+
+            <p>
+
+                Isaac Newton.
+
+                <br>
+
+                Beethoven Virus.
+
+                <br>
+
+                Don Quixote.
+
+            </p>
+
+            <p>
+
+                Tiga puzzle.
+
+                <br>
+
+                Satu perjalanan.
+
+                <br>
+
+                Dan sekarang...
+
+            </p>
+
+            <h2>
+                THE IMPOSSIBLE PUZZLE
+                HAS BEEN SOLVED.
+            </h2>
+
+            <p>
+
+                Terima kasih sudah memainkan
+                puzzle ini.
+
+            </p>
+
+            <p>
+
+                <strong>
+                    CONGRATULATIONS.
+                </strong>
+
+            </p>
+
+        </div>
+
+    </section>
+
+</div>
+
+<script>
+
+    /* =====================================
+       NAVIGATION
+       ===================================== */
+
+    function hideAll() {
+
+        const screens = [
+
+            "startScreen",
+            "puzzle1",
+            "success1",
+            "puzzle2",
+            "videoReturn",
+            "puzzle3",
+            "finalScreen"
+
+        ];
+
+        screens.forEach(id => {
+
+            document
+                .getElementById(id)
+                .classList
+                .add("hidden");
+
+        });
+
+    }
+
+    function showScreen(id) {
+
+        hideAll();
+
+        document
+            .getElementById(id)
+            .classList
+            .remove("hidden");
+
+    }
+
+    /* =====================================
+       START
+       ===================================== */
+
+    function startGame() {
+
+        showScreen("puzzle1");
+
+    }
+
+    /* =====================================
+       PUZZLE 1
+       ===================================== */
+
+    const answer1 =
+
+        "sebuah risalah yang ditulis dalam 9 halaman yang disalin ke dalam buku register royal society pada desember 1684[29] risalah ini membentuk inti argumen yang kemudian akan dikembangkan dalam principia.";
+
+    function normalize(text) {
+
+        return text
+
+            .trim()
+
+            .replace(/\s+/g, " ")
+
+            .toLowerCase();
+
+    }
+
+    function openNewton() {
+
+        window.open(
+
+            "https://id.wikipedia.org/wiki/Isaac_Newton#",
+
+            "_blank"
+
+        );
+
+    }
+
+    function checkPuzzle1() {
+
+        const userAnswer =
+
+            normalize(
+                document.getElementById(
+                    "answer1"
+                ).value
+            );
+
+        const result =
+
+            document.getElementById(
+                "result1"
+            );
+
+        if (
+            userAnswer ===
+            answer1
+        ) {
+
+            result.className =
+                "success";
+
+            result.innerHTML =
+
+                "✓ ACCESS GRANTED";
+
+            setTimeout(() => {
+
+                showScreen(
+                    "success1"
+                );
+
+            }, 1000);
+
+        } else {
+
+            result.className =
+                "error";
+
+            result.innerHTML =
+
+                "✗ INCORRECT. Coba periksa kembali kalimatnya.";
+
+        }
+
+    }
+
+    /* =====================================
+       PUZZLE 2
+       ===================================== */
+
+    const answer2 = "DSAUSU";
+
+    function goPuzzle2() {
+
+        showScreen("puzzle2");
+
+    }
+
+    function openMusic() {
+
+        window.open(
+
+            "https://virtualpiano.net/music-sheet/beethoven-virus/",
+
+            "_blank"
+
+        );
+
+    }
+
+    function checkPuzzle2() {
+
+        const userAnswer =
+
+            document.getElementById(
+                "answer2"
+            ).value
+
+            .trim()
+
+            .replace(/\s+/g, "")
+
+            .toUpperCase();
+
+        const result =
+
+            document.getElementById(
+                "result2"
+            );
+
+        if (
+            userAnswer ===
+            answer2
+        ) {
+
+            result.className =
+                "success";
+
+            result.innerHTML = `
+
+                ✓ PATTERN ACCEPTED
+
+                <br><br>
+
+                Tunggu...
+
+            `;
+
+            document
+                .getElementById(
+                    "answer2"
+                )
+                .disabled = true;
+
+            setTimeout(() => {
+
+                window.open(
+
+                    "https://youtu.be/eBGIQ7ZuuiU?si=PiqDZRryOOeY9PG_",
+
+                    "_blank"
+
+                );
+
+                result.innerHTML = `
+
+                    THE PATTERN WAS NEVER
+                    THE ANSWER.
+
+                    <br><br>
+
+                    Video telah dibuka.
+                    Setelah selesai, kembali ke puzzle.
+
+                `;
+
+            }, 1200);
+
+            setTimeout(() => {
+
+                const returnButton =
+                    document.createElement(
+                        "button"
+                    );
+
+                returnButton.textContent =
+                    "CONTINUE AFTER THE VIDEO →";
+
+                returnButton.onclick =
+                    function() {
+
+                        showScreen(
+                            "videoReturn"
+                        );
+
+                    };
+
+                result.appendChild(
+                    returnButton
+                );
+
+            }, 2500);
+
+        } else {
+
+            result.className =
+                "error";
+
+            result.innerHTML =
+
+                "✗ WRONG PATTERN — KEEP SEARCHING.";
+
+        }
+
+    }
+
+    /* =====================================
+       PUZZLE 3
+       ===================================== */
+
+    const answer3 = [
+
+        "shall",
+        "Don",
+        "quixote,",
+        "don't",
+        "understand",
+        "what",
+        "sancho",
+        "saying"
+
+    ];
+
+    let selectedWords = [];
+
+    function goPuzzle3() {
+
+        showScreen("puzzle3");
+
+    }
+
+    function openDonQuixote() {
+
+        window.open(
+
+            "https://americanliterature.com/author/miguel-de-cervantes/book/don-quixote/part-i-chapter-l",
+
+            "_blank"
+
+        );
+
+    }
+
+    document
+        .querySelectorAll(".word")
+        .forEach(word => {
+
+            word.addEventListener(
+                "click",
+                function() {
+
+                    const value =
+                        this.dataset.word;
+
+                    if (
+                        selectedWords
+                            .includes(value)
+                    ) {
+
+                        return;
+
+                    }
+
+                    selectedWords
+                        .push(value);
+
+                    this.classList
+                        .add("selected");
+
+                    updateAnswer();
+
+                }
+            );
+
+        });
+
+    function updateAnswer() {
+
+        const box =
+
+            document.getElementById(
+                "answerBox"
+            );
+
+        if (
+            selectedWords.length === 0
+        ) {
+
+            box.textContent =
+                "Susun kata-kata di sini...";
+
+            return;
+
+        }
+
+        box.textContent =
+            selectedWords.join(" ");
+
+    }
+
+    function checkPuzzle3() {
+
+        const result =
+
+            document.getElementById(
+                "result3"
+            );
+
+        const correct =
+
+            selectedWords.length ===
+                answer3.length
+
+            &&
+
+            selectedWords.every(
+                (word, index) =>
+
+                    word ===
+                    answer3[index]
+            );
+
+        if (correct) {
+
+            result.className =
+                "success";
+
+            result.innerHTML = `
+
+                ✓ FINAL ANSWER ACCEPTED
+
+                <br><br>
+
+                THE LAST DOOR IS OPEN.
+
+            `;
+
+            document
+                .querySelectorAll(".word")
+                .forEach(word => {
+
+                    word.style
+                        .pointerEvents =
+                        "none";
+
+                });
+
+            setTimeout(() => {
+
+                showScreen(
+                    "finalScreen"
+                );
+
+            }, 1800);
+
+        } else {
+
+            result.className =
+                "error";
+
+            result.innerHTML = `
+
+                ✗ INCORRECT.
+
+                <br>
+
+                The words are not
+                in the correct order.
+
+            `;
+
+        }
+
+    }
+
+    function resetPuzzle3() {
+
+        selectedWords = [];
+
+        document
+            .querySelectorAll(".word")
+            .forEach(word => {
+
+                word.classList
+                    .remove("selected");
+
+                word.style
+                    .pointerEvents =
+                    "auto";
+
+            });
+
+        document
+            .getElementById(
+                "result3"
+            )
+            .textContent = "";
+
+        updateAnswer();
+
+    }
+
+</script>
+
+</body>
+
+</html>
